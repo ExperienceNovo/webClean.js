@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "gulp-autoprefixer": "*"
+  },
+  "devDependencies": {
+    "gulp-minify-css": "^1.2.0",
+    "gulp-prompt": "^0.1.2",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-strip-css-comments": "^1.1.0"
+  }
+}
