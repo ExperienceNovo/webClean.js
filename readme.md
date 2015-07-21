@@ -49,3 +49,4 @@ Below is a list of available gulp tasks, by language.
     - uncomment-css
     - autoprefix-css
     - minify-css
+    - all-css
