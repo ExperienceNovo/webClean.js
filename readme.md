@@ -10,10 +10,15 @@ WebClean is a code cleanup utility built on node.js and gulp.
      - remove comments
      - autoprefix for browsers with greater than 5% market share
      - minify css (ie8 capable)
+     - remove unused css (coming soon)
+     - concatenate css files (coming soon)
 
 - HTML (coming soon)
 
 - JS (coming soon)
+    - format JS files (make it pretty, coming soon)
+    - parse and format JSON files (coming soon)
+    - wrap JS files 
 
 - PHP (coming soon)
 
