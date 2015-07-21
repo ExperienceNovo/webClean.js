@@ -1,87 +1,102 @@
 //load from npm
 var inquirer = require('inquirer');
+var rx = require('rx');
 
 //load gulp stuff
 var gulp = require('gulp');
 var gulpLoadPlugins = require('gulp-load-plugins');
 var plugins = gulpLoadPlugins();
 
-/* Helper */
+/** HELPER **/
 
-gulp.task('start', function(done) {
-    inquirer.prompt([{
-        type: 'confirm',
-        message: 'Do you want to uncomment the css?',
-        default: true,
-        name: 'start'
-    }], function(answers) {
-        if(answers.start) {
-            console.log('css will be uncommented ...')
-            gulp.start('question two')
+var prompts = [
+    ['confirm','uncomment','Want to uncomment CSS?'],
+    ['confirm','autoprefix','Want to autoprefix CSS?'],
+    ['confirm','minify','Want to minify CSS?']
+];
+
+var prompter = rx.Observable.create(function( obs ) {
+    setTimeout(function () {
+        for (var i = 0; i < prompts.length; i++) {
+            var entry = prompts[i];
+            obs.onNext({
+                type: entry[0],
+                name: entry[1],
+                message: entry[2],
+            });
         }
+        obs.onCompleted();
     });
 });
 
-gulp.task('question two', function(done) {
-    inquirer.prompt([{
-        type: 'confirm',
-        message: 'Do you want to autoprefix the css?',
-        default: true,
-        name: 'start'
-    }], function(answers) {
-        if(answers.start) {
-            console.log('css will be uncommented and autoprefixed ...')
-            gulp.start('question three')
-        }
-        else {
-            return gulp.src('css/*.css')
-                console.log('css will be uncommented ...')
-                //remove comments from css
-                .pipe(plugins.stripCssComments())
-                //save file to destination
-                .pipe(gulp.dest('dist'));
-        }
-    });
+//fire the helper, log responses, and fire actions accordingly
+inquirer.prompt(prompter, function(responses) {
+    console.log(responses);
+    if (responses.uncomment === true && responses.autoprefix == false && responses.minify === false) {
+        return gulp.src('css/*.css')
+            //remove comments from css
+            .pipe(plugins.stripCssComments())
+            //save file to destination
+            .pipe(gulp.dest('dist'));
+    }
+    if (responses.uncomment === true && responses.autoprefix == true && responses.minify === false) {
+        return gulp.src('css/*.css')
+            //remove comments from css
+            .pipe(plugins.stripCssComments())
+            //autoprefixer to ensure cross-browser compatibility
+            .pipe(plugins.autoprefixer({
+                browsers: ['> 5%'],
+                cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
+            }))
+            //save file to destination
+            .pipe(gulp.dest('dist'));
+    }
+    if (responses.uncomment === false && responses.autoprefix === true && responses.minify === false) {
+        return gulp.src('css/*.css')
+            //autoprefixer to ensure cross-browser compatibility
+            .pipe(plugins.autoprefixer({
+                browsers: ['> 5%'],
+                cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
+            }))
+            //save file to destination
+            .pipe(gulp.dest('dist'));
+    }
+    if (responses.uncomment === false && responses.autoprefix === true && responses.minify === true) {
+        return gulp.src('css/*.css')
+            //autoprefixer to ensure cross-browser compatibility
+            .pipe(plugins.autoprefixer({
+                browsers: ['> 5%'],
+                cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
+            }))
+            //minify css
+            .pipe(plugins.minifyCss({compatibility: 'ie8'}))
+            //save file to destination
+            .pipe(gulp.dest('dist'));
+    }
+    if (responses.uncomment === false && responses.autoprefix === false && responses.minify === true) {
+        return gulp.src('css/*.css')
+            //minify css
+            .pipe(plugins.minifyCss({compatibility: 'ie8'}))
+            //save file to destination
+            .pipe(gulp.dest('dist'));
+    }
+    if (responses.uncomment === true && responses.autoprefix === true && responses.minify === true) {
+        return gulp.src('css/*.css')
+            //remove comments from css
+            .pipe(plugins.stripCssComments())
+            //autoprefixer to ensure cross-browser compatibility
+            .pipe(plugins.autoprefixer({
+                browsers: ['> 5%'],
+                cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
+            }))
+            //minify css
+            .pipe(plugins.minifyCss({compatibility: 'ie8'}))
+            //save file to destination
+            .pipe(gulp.dest('dist'));
+    }
 });
 
-gulp.task('question three', function(done) {
-    inquirer.prompt([{
-        type: 'confirm',
-        message: 'Do you want to minify the css?',
-        default: true,
-        name: 'start'
-    }], function(answers) {
-        if(answers.start) {
-            console.log('css will be uncommented, autoprefixed, and minified ...')
-            return gulp.src('css/*.css')
-                //remove comments from css
-                .pipe(plugins.stripCssComments())
-                //autoprefixer to ensure cross-browser compatibility
-                .pipe(plugins.autoprefixer({
-                    browsers: ['> 5%'],
-                    cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
-                }))
-                //minify css
-                .pipe(plugins.minifyCss({compatibility: 'ie8'}))
-                //save file to destination
-                .pipe(gulp.dest('dist'));
-        }
-        else {
-            console.log('css will be uncommented and autoprefixed ...')
-            return gulp.src('css/*.css')
-                //remove comments from css
-                .pipe(plugins.stripCssComments())
-                //autoprefixer to ensure cross-browser compatibility
-                .pipe(plugins.autoprefixer({
-                    browsers: ['> 5%'],
-                    cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
-                }))
-                //save file to destination
-                .pipe(gulp.dest('dist'));
-
-        }
-    });
-});
+/** GULP TASKS **/
 
 /* CSS Tasks */
 
