@@ -214,7 +214,7 @@ gulp.task('autoprefix-css', function() {
 });
 
 gulp.task('format-css', function() {
-    return gulp.src('css/*.css')
+    return gulp.src('dist/*.css')
         //prettify css
         .pipe(prettify({indentSize: 4}))
         //save file to destination
@@ -238,7 +238,7 @@ gulp.task('setup-dist-js', function() {
 });
 
 gulp.task('format-js', function() {
-    return gulp.src('js/*.js')
+    return gulp.src('dist/*.js')
         //prettify js
         .pipe(prettify({indentSize: 2}))
         //save file to destination
@@ -254,7 +254,7 @@ gulp.task('setup-dist-html', function() {
 });
 
 gulp.task('format-html', function() {
-    return gulp.src('html/*.html')
+    return gulp.src('dist/*.html')
         //prettify html
         .pipe(prettify({indentSize: 4}))
         //save file to destination

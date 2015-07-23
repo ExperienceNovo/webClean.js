@@ -75,7 +75,7 @@ gulp.task('all-css', function() {
 /* JS Tasks */
 
 gulp.task('format-js', function() {
-    return gulp.src('js/*.js','js/*.json')
+    return gulp.src('js/*.js')
         //prettify js
         .pipe(prettify({config: '.jsbeautifyrc', mode: 'VERIFY_AND_WRITE'}))
         //save file to destination
