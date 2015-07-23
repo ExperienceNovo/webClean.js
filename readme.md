@@ -8,17 +8,19 @@ webClean.js is a code cleanup utility built on node.js and gulp.
 
 - CSS
      - remove comments
+     - remove unused css (and format)
      - autoprefix for browsers with greater than 5% market share
+     - format CSS files (prettify)
      - minify css (ie8 capable)
-     - remove unused css
      - concatenate css files (coming soon)
 
 - SASS/SCSS (coming soon)
 
-- HTML (coming soon)
+- HTML
+    - format HTML files (prettify)
 
-- JS (coming soon)
-    - format JS files (make it pretty, coming soon)
+- JS
+    - format JS files (prettify)
     - parse and format JSON files (coming soon)
     - wrap JS files (coming soon)
 
@@ -26,10 +28,14 @@ webClean.js is a code cleanup utility built on node.js and gulp.
 
 ###Using webClean.js
 
+The dependencies below are included in this repo in /node_modules, but you do need to install both node.js and gulp
+before using webClean.js.
+
 - prerequisites: node.js, gulp
 - dependencies:
     - node extensions: inquirer, rx
-    - gulp extensions: minify-css, autoprefixer, strip-css-comments, prompt, sourcemaps, uncss, run-sequence
+    - css gulp extensions: minify-css, autoprefixer, strip-css-comments, prompt, sourcemaps, uncss, run-sequence
+    - js gulp extensions: jsbeautifier
 
 Open up terminal and navigate to the home directory. Make sure that the files you would like to work with are in their
 respective folders (/css, /html, etc.). You can run webClean.js with the command line tool,
@@ -59,3 +65,9 @@ Below is a list of available gulp tasks, by language.
     - autoprefix-css
     - minify-css
     - all-css
+
+- JS
+    - format-js
+
+- HTML
+    - format-html
