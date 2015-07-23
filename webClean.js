@@ -45,60 +45,62 @@ var prompter = rx.Observable.create(function(obs) {
     });
 });
 
+//** WORK ON ERROR HANDLING
+
 //fire the helper, log responses, and fire actions accordingly
 inquirer.prompt(prompter, function(initResponses) {
     console.log(initResponses);
-    var doArray = []; //declare empty array to store gulp tasks
+    var taskArray = []; //declare empty array to store gulp tasks
     if (initResponses.language == 'css') {
         promptsReplace = cssPrompts;
         inquirer.prompt(prompter, function(cssResponses) {
-            doArray.push('setup-dist-css') //moves css files to 'dist' for editing
+            taskArray.push('setup-dist-css') //moves css files to 'dist' for editing
             if (cssResponses.uncomment === true) {
-                doArray.push('uncomment-css');
+                taskArray.push('uncomment-css');
                 if (cssResponses.remove === true) {
-                    doArray.push('uncss-css');
+                    taskArray.push('uncss-css');
                     if (cssResponses.autoprefix === true) {
-                        doArray.push('autoprefix-css');
+                        taskArray.push('autoprefix-css');
                         if (cssResponses.minify === true) {
-                            doArray.push('minify-css');
+                            taskArray.push('minify-css');
                         }
                         else {
                         }
                     }
                     else {
                         if (cssResponses.minify === true) {
-                            doArray.push('minify-css');
+                            taskArray.push('minify-css');
                         }
                     }
                 }
                 else {
                     if (cssResponses.autoprefix === true) {
-                        doArray.push('autoprefix-css');
+                        taskArray.push('autoprefix-css');
                     }
                     if (cssResponses.minify === true) {
-                        doArray.push('minify-css');
+                        taskArray.push('minify-css');
                     }
                 }
             }
             else {
                 if (cssResponses.remove === true) {
-                    doArray.push('uncss-css');
+                    taskArray.push('uncss-css');
                 }
                 if (cssResponses.autoprefix === true) {
-                    doArray.push('autoprefix-css');
+                    taskArray.push('autoprefix-css');
                 }
                 if (cssResponses.minify === true) {
-                    doArray.push('minify-css');
+                    taskArray.push('minify-css');
                 }
             }
-            //run through sequenced tasks stored in doArray
+            //run through sequenced tasks stored in taskArray
             runSequence = require('run-sequence').use(gulp);
-            for (var i = 0; i < doArray.length; i++) {
-                task = doArray[i];
+            for (var i = 0; i < taskArray.length; i++) {
+                task = taskArray[i];
                 runSequence(task);
                 console.log(task);
             }
-            console.log(doArray);
+            console.log(taskArray);
         });
     }
     if (initResponses.language == 'sass/scss') {
@@ -155,5 +157,5 @@ gulp.task('autoprefix-css', function() {
             cascade: false //if true: changes the CSS indentation to create a nice visual cascade of prefixesalse
         }))
         //save file to destination
-        .pipe(gulp.dest('buffer'));
+        .pipe(gulp.dest('dist'));
 });
